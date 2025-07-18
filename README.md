@@ -51,13 +51,26 @@ CREATE TABLE retail_sales (
     price_per_unit FLOAT,
     cogs FLOAT,
     total_sale FLOAT
-); ```sql
+); 
 
 🔍 Data Exploration & Cleaning
 Count total records, unique customers, and categories.
 
 Check & delete rows with null values.
 
+SELECT COUNT(*) FROM retail_sales;
+SELECT COUNT(DISTINCT customer_id) FROM retail_sales;
+SELECT DISTINCT category FROM retail_sales;
+
+DELETE FROM retail_sales
+WHERE transaction_id IS NULL
+   OR sale_date IS NULL
+   OR sale_time IS NULL
+   OR gender IS NULL
+   OR category IS NULL
+   OR quantity IS NULL
+   OR cogs IS NULL
+   OR total_sale IS NULL;
 
 
 
