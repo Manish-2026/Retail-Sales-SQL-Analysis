@@ -52,12 +52,12 @@ CREATE TABLE retail_sales (
     cogs FLOAT,
     total_sale FLOAT
 ); 
-
+```
 🔍 Data Exploration & Cleaning
 Count total records, unique customers, and categories.
 
 Check & delete rows with null values.
-
+```sql
 SELECT COUNT(*) FROM retail_sales;
 SELECT COUNT(DISTINCT customer_id) FROM retail_sales;
 SELECT DISTINCT category FROM retail_sales;
@@ -71,6 +71,105 @@ WHERE transaction_id IS NULL
    OR quantity IS NULL
    OR cogs IS NULL
    OR total_sale IS NULL;
+```
+
+📊 Data Analysis & Key Questions
+1️⃣ Sales on '2022-11-05'
+```sql
+SELECT * FROM retail_sales
+WHERE sale_date = '2022-11-05';
+```
+
+2️⃣ Transactions for 'Clothing' category with quantity > 3 in Nov-2022
+```sql
+SELECT * FROM retail_sales
+WHERE category = 'Clothing'
+  AND quantity > 3
+  AND sale_date >= '2022-11-01' AND sale_date < '2022-12-01';
+```
+
+3️⃣ Total sales & order count per category
+```sql
+SELECT category, SUM(total_sale) AS total_sales, COUNT(*) AS total_orders
+FROM retail_sales
+GROUP BY category;
+```
+
+4️⃣ Average age of customers who purchased 'Beauty' items
+```sql
+SELECT AVG(age) AS average_age
+FROM retail_sales
+WHERE category = 'Beauty';
+```
+
+5️⃣ Transactions where total_sale > 1000
+```sql
+SELECT * FROM retail_sales
+WHERE total_sale > 1000;
+```
+
+6️⃣ Transaction counts by gender and category
+```sql
+SELECT category, gender, COUNT(*) AS total_transactions
+FROM retail_sales
+GROUP BY category, gender;
+```
+
+7️⃣ Best selling month (highest avg sale) each year
+```sql
+SELECT year, month, Average_sales
+FROM (
+    SELECT YEAR(sale_date) AS year, MONTH(sale_date) AS month,
+           AVG(total_sale) AS Average_sales,
+           RANK() OVER(PARTITION BY YEAR(sale_date) ORDER BY AVG(total_sale) DESC) AS rank
+    FROM retail_sales
+    GROUP BY year, month
+) t
+WHERE rank = 1;
+```
+
+8️⃣ Top 5 customers by total sales
+```sql
+SELECT customer_id, SUM(total_sale) AS Total_sales
+FROM retail_sales
+GROUP BY customer_id
+ORDER BY Total_sales DESC
+LIMIT 5;
+```
+
+9️⃣ Unique customer count per category
+```sql
+SELECT category, COUNT(DISTINCT customer_id) AS unique_customers
+FROM retail_sales
+GROUP BY category;
+```
+
+🔟 Order count by shift (Morning <12, Afternoon 12–17, Evening >17)
+```sql
+WITH hourly_sales AS (
+    SELECT *,
+        CASE
+            WHEN HOUR(sale_time) < 12 THEN 'Morning'
+            WHEN HOUR(sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+            ELSE 'Evening'
+        END AS shift
+    FROM retail_sales
+)
+SELECT shift, COUNT(*) AS total_orders
+FROM hourly_sales
+GROUP BY shift;
+```
+
+🧠 Findings
+Peak Sales: Identified best-selling months each year.
+Top Customers: Found highest spending customers.
+Customer Demographics: Average age by category.
+High-Value Orders: Transactions >1000.
+Sales Patterns: More sales in Morning/Afternoon shifts; category trends.
+
+📌 Conclusion
+This project demonstrates practical SQL techniques for data analysis — covering database setup, data cleaning, EDA, and answering business questions.
+It helps understand retail sales trends, customer behavior, and category performance.
 
 
 
