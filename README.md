@@ -22,6 +22,11 @@ It covers database creation, data cleaning, EDA, and answering real business que
 
 ## 📁 Project Structure
 
+Retail-Sales-SQL-Analysis/
+├── data/
+│ └── SQL - Retail Sales Analysis_utf .csv
+└── sql/
+└── sql_based_proj_01.sql
 
 ---
 
@@ -46,8 +51,13 @@ CREATE TABLE retail_sales (
     price_per_unit FLOAT,
     cogs FLOAT,
     total_sale FLOAT
-);
-```sql
+); ```sql
+
+🔍 Data Exploration & Cleaning
+Count total records, unique customers, and categories.
+
+Check & delete rows with null values.
+
 
 
 
